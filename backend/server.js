@@ -31,7 +31,7 @@ app.use(cors())
 app.use(express.json())
 
 // MongoDB connection
-mongoose.connect(process.env.MONGODB_URI || "mongodb://localhost:27017/computer-repair-db", {
+mongoose.connect("mongodb+srv://ibrokhimovme:RZXi00u156lBgfPL@cluster0.ne9ka2v.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0", {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
@@ -72,50 +72,6 @@ const authorizeRole = (roles) => {
   }
 }
 
-// // Manager qo'shish uchun sodda endpoint
-// app.get("/api/create-manager", async (req, res) => {
-//   const managerUser = {
-//     userType: "individual", // Jismoniy shaxs
-//     role: "manager",
-//     email: "manager@dernsupport.uz",
-//     password: "123456",
-//     phone: "+998901234567",
-//     address: "Toshkent sh., Chilonzor tumani, 12-uy",
-//     city: "Toshkent",
-//     firstName: "Javohir",
-//     lastName: "Karimov",
-//     isActive: true,
-//   }
-
-//   try {
-//     // Email mavjudligini tekshirish
-//     const existingUser = await User.findOne({ email: managerUser.email })
-//     if (existingUser) {
-//       return res.status(400).json({ message: "Bu email bilan manager allaqachon mavjud" })
-//     }
-
-//     const hashedPassword = await bcrypt.hash(managerUser.password, 10)
-//     managerUser.password = hashedPassword
-
-//     const user = new User(managerUser)
-//     await user.save()
-
-//     res.status(201).json({
-//       message: "Manager muvaffaqiyatli yaratildi",
-//       user: {
-//         id: user._id,
-//         email: user.email,
-//         firstName: user.firstName,
-//         lastName: user.lastName,
-//         role: user.role,
-//         userType: user.userType,
-//       },
-//     })
-//   } catch (error) {
-//     console.error("Manager yaratishda xatolik:", error)
-//     res.status(500).json({ message: "Server xatoligi" })
-//   }
-// })
 
 // Routes
 
