@@ -24,7 +24,7 @@ export function MasterDashboard() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/dashboard", {
+        const response = await fetch("https://digus.uz/api/dashboard", {
           headers: {
             Authorization: `Bearer ${token}`,
           },

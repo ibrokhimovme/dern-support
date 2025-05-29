@@ -38,7 +38,7 @@ export function WorkProfileSection() {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/profile", {
+        const response = await fetch("https://digus.uz/api/profile", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
@@ -63,7 +63,7 @@ export function WorkProfileSection() {
   const handleSave = async () => {
     setSaving(true)
     try {
-      const response = await fetch("http://localhost:5000/api/profile/update", {
+      const response = await fetch("https://digus.uz/api/profile/update", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

@@ -60,7 +60,7 @@ export function ServiceRequestForm() {
   useEffect(() => {
     const fetchServiceTypes = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/services/types")
+        const response = await fetch("https://digus.uz/api/services/types")
         const data = await response.json()
         if (response.ok) {
           setServiceTypes(data.serviceTypes)
@@ -89,7 +89,7 @@ export function ServiceRequestForm() {
       // Fetch full user profile
       const fetchProfile = async () => {
         try {
-          const response = await fetch("http://localhost:5000/api/profile", {
+          const response = await fetch("https://digus.uz/api/profile", {
             headers: {
               Authorization: `Bearer ${token}`,
             },
@@ -130,7 +130,7 @@ export function ServiceRequestForm() {
         headers.Authorization = `Bearer ${token}`
       }
 
-      const response = await fetch("http://localhost:5000/api/services/request", {
+      const response = await fetch("https://digus.uz/api/services/request", {
         method: "POST",
         headers,
         body: JSON.stringify(requestData),

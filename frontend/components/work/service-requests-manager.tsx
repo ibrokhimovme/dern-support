@@ -96,7 +96,7 @@ export function ServiceRequestsManager() {
 
   const fetchRequests = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/services/all-requests", {
+      const response = await fetch("https://digus.uz/api/services/all-requests", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -114,7 +114,7 @@ export function ServiceRequestsManager() {
 
   const fetchMasters = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/masters", {
+      const response = await fetch("https://digus.uz/api/masters", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -142,7 +142,7 @@ export function ServiceRequestsManager() {
     setAssigningId(requestId)
 
     try {
-      const response = await fetch(`http://localhost:5000/api/services/requests/${requestId}/assign`, {
+      const response = await fetch(`https://digus.uz/api/services/requests/${requestId}/assign`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

@@ -112,7 +112,7 @@ export function InventoryManager() {
       if (categoryFilter) params.append("category", categoryFilter)
       if (showLowStock) params.append("lowStock", "true")
 
-      const response = await fetch(`http://localhost:5000/api/inventory?${params}`, {
+      const response = await fetch(`https://digus.uz/api/inventory?${params}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -130,7 +130,7 @@ export function InventoryManager() {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/inventory/categories", {
+      const response = await fetch("https://digus.uz/api/inventory/categories", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -199,8 +199,8 @@ export function InventoryManager() {
 
     try {
       const url = editingItem
-        ? `http://localhost:5000/api/inventory/${editingItem._id}`
-        : "http://localhost:5000/api/inventory"
+        ? `https://digus.uz/api/inventory/${editingItem._id}`
+        : "https://digus.uz/api/inventory"
 
       const method = editingItem ? "PUT" : "POST"
 
@@ -257,7 +257,7 @@ export function InventoryManager() {
     setDeleting(itemId)
 
     try {
-      const response = await fetch(`http://localhost:5000/api/inventory/${itemId}`, {
+      const response = await fetch(`https://digus.uz/api/inventory/${itemId}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,

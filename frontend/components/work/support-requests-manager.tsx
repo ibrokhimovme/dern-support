@@ -77,7 +77,7 @@ export function SupportRequestsManager() {
 
   const fetchSupportRequests = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/support/requests", {
+      const response = await fetch("https://digus.uz/api/support/requests", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -107,7 +107,7 @@ export function SupportRequestsManager() {
     setUpdatingId(requestId)
 
     try {
-      const response = await fetch(`http://localhost:5000/api/support/requests/${requestId}`, {
+      const response = await fetch(`https://digus.uz/api/support/requests/${requestId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

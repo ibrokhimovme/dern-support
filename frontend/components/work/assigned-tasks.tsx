@@ -70,7 +70,7 @@ export function AssignedTasks() {
 
   const fetchTasks = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/services/assigned-to-me", {
+      const response = await fetch("https://digus.uz/api/services/assigned-to-me", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -90,7 +90,7 @@ export function AssignedTasks() {
     setUpdatingId(requestId)
 
     try {
-      const response = await fetch(`http://localhost:5000/api/services/requests/${requestId}/status`, {
+      const response = await fetch(`https://digus.uz/api/services/requests/${requestId}/status`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

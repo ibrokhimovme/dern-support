@@ -51,7 +51,7 @@ export function CompletedTasks() {
 
   const fetchCompletedTasks = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/services/completed-by-me", {
+      const response = await fetch("https://digus.uz/api/services/completed-by-me", {
         headers: {
           Authorization: `Bearer ${token}`,
         },

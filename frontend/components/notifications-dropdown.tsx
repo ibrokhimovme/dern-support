@@ -36,7 +36,7 @@ export function NotificationsDropdown() {
 
     setLoading(true)
     try {
-      const response = await fetch("http://localhost:5000/api/notifications", {
+      const response = await fetch("https://digus.uz/api/notifications", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -55,7 +55,7 @@ export function NotificationsDropdown() {
 
   const markAsRead = async (notificationId: string) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/notifications/${notificationId}/read`, {
+      const response = await fetch(`https://digus.uz/api/notifications/${notificationId}/read`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -72,7 +72,7 @@ export function NotificationsDropdown() {
 
   const markAllAsRead = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/notifications/mark-all-read", {
+      const response = await fetch("https://digus.uz/api/notifications/mark-all-read", {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,

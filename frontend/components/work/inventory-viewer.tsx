@@ -79,7 +79,7 @@ export function InventoryViewer() {
       if (categoryFilter) params.append("category", categoryFilter)
       if (showLowStock) params.append("lowStock", "true")
 
-      const response = await fetch(`http://localhost:5000/api/inventory?${params}`, {
+      const response = await fetch(`https://digus.uz/api/inventory?${params}`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -97,7 +97,7 @@ export function InventoryViewer() {
 
   const fetchCategories = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/inventory/categories", {
+      const response = await fetch("https://digus.uz/api/inventory/categories", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -128,7 +128,7 @@ export function InventoryViewer() {
     setUsing(true)
 
     try {
-      const response = await fetch(`http://localhost:5000/api/inventory/${selectedItem._id}/use`, {
+      const response = await fetch(`https://digus.uz/api/inventory/${selectedItem._id}/use`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

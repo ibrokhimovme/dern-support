@@ -69,7 +69,7 @@ export function ServiceTypesManager() {
 
   const fetchServiceTypes = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/services/admin/types", {
+      const response = await fetch("https://digus.uz/api/services/admin/types", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -121,8 +121,8 @@ export function ServiceTypesManager() {
 
     try {
       const url = editingType
-        ? `http://localhost:5000/api/services/types/${editingType._id}`
-        : "http://localhost:5000/api/services/types"
+        ? `https://digus.uz/api/services/types/${editingType._id}`
+        : "https://digus.uz/api/services/types"
 
       const method = editingType ? "PUT" : "POST"
 
@@ -175,7 +175,7 @@ export function ServiceTypesManager() {
     setDeleting(typeId)
 
     try {
-      const response = await fetch(`http://localhost:5000/api/services/types/${typeId}`, {
+      const response = await fetch(`https://digus.uz/api/services/types/${typeId}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,

@@ -53,7 +53,7 @@ export function UsersManager() {
 
   const fetchUsers = async () => {
     try {
-      const response = await fetch("http://localhost:5000/api/admin/users", {
+      const response = await fetch("https://digus.uz/api/admin/users", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -73,7 +73,7 @@ export function UsersManager() {
     setUpdatingId(userId)
 
     try {
-      const response = await fetch(`http://localhost:5000/api/users/${userId}/role`, {
+      const response = await fetch(`https://digus.uz/api/users/${userId}/role`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

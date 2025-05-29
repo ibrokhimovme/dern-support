@@ -67,7 +67,7 @@ export function ServiceRequestsSection() {
   useEffect(() => {
     const fetchRequests = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/services/my-requests", {
+        const response = await fetch("https://digus.uz/api/services/my-requests", {
           headers: {
             Authorization: `Bearer ${token}`,
           },
