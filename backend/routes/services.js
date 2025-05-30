@@ -153,6 +153,7 @@ router.post("/request", async (req, res) => {
 
     let userId = req.user?.userId
     let isAutoCreated = false
+    let randomPassword;
 
     // Agar foydalanuvchi login qilmagan bo'lsa, yangi account yaratish
     if (!userId) {
@@ -161,7 +162,7 @@ router.post("/request", async (req, res) => {
 
       if (!existingUser) {
         // Yangi foydalanuvchi yaratish
-        const randomPassword = generateRandomPassword()
+        randomPassword = generateRandomPassword()
         const hashedPassword = await bcrypt.hash(randomPassword, 10)
 
         const newUser = new User({
@@ -179,20 +180,6 @@ router.post("/request", async (req, res) => {
         await newUser.save()
         userId = newUser._id
         isAutoCreated = true
-
-        // Email yuborish
-        const emailContent = `
-          <h2>Sizga account yaratildi!</h2>
-          <p>Hurmatli ${firstName} ${lastName},</p>
-          <p>Sizning xizmat so'rovingiz uchun avtomatik account yaratildi.</p>
-          <p><strong>Login ma'lumotlari:</strong></p>
-          <p>Email: ${email}</p>
-          <p>Parol: ${randomPassword}</p>
-          <p>Agar tizimdan foydalanishni xohlasangiz, ushbu ma'lumotlar bilan login qiling.</p>
-          <p>Parolni o'zgartirishni unutmang!</p>
-        `
-
-        await sendEmail(email, "Sizga account yaratildi", emailContent)
 
         // Notification yaratish
         await createNotification(
@@ -246,7 +233,8 @@ router.post("/request", async (req, res) => {
     )
 
     res.status(201).json({
-      message: "Xizmat so'rovi muvaffaqiyatli yuborildi",
+      message: "Xizmat so'rovi muvaffaqiyatli bo'ldi",
+      generatedPassword: randomPassword,
       serviceRequest,
       autoCreatedAccount: isAutoCreated,
     })

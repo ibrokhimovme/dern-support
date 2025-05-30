@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
@@ -34,6 +33,8 @@ export function ServiceRequestForm() {
   const [serviceTypes, setServiceTypes] = useState<ServiceType[]>([])
   const [selectedDate, setSelectedDate] = useState<Date>()
   const [showAccountModal, setShowAccountModal] = useState(false)
+  const [showPrivacy, setShowPrivacy] = useState(false)
+  const [agreed, setAgreed] = useState(false)
   const [accountInfo, setAccountInfo] = useState<{
     email: string
     password: string
@@ -49,31 +50,19 @@ export function ServiceRequestForm() {
     preferredTime: "",
     contactMethod: "",
     additionalInfo: "",
-    // Guest user fields
     firstName: "",
     lastName: "",
     email: "",
     phone: "",
   })
 
-  // Load service types
   useEffect(() => {
-    const fetchServiceTypes = async () => {
-      try {
-        const response = await fetch("https://digus.uz/api/services/types")
-        const data = await response.json()
-        if (response.ok) {
-          setServiceTypes(data.serviceTypes)
-        }
-      } catch (error) {
-        console.error("Xizmat turlarini yuklashda xatolik:", error)
-      }
-    }
-
-    fetchServiceTypes()
+    fetch("https://digus.uz/api/services/types")
+      .then((res) => res.json())
+      .then((data) => setServiceTypes(data.serviceTypes || []))
+      .catch((err) => console.error("Xizmat turlarini yuklashda xatolik:", err))
   }, [])
 
-  // Auto-fill user data if logged in
   useEffect(() => {
     if (user) {
       setFormData((prev) => ({
@@ -81,21 +70,14 @@ export function ServiceRequestForm() {
         firstName: user.firstName || "",
         lastName: user.lastName || "",
         email: user.email || "",
-        phone: "", // Phone will be fetched from profile
-        city: "", // City will be fetched from profile
-        address: "", // Address will be fetched from profile
       }))
 
-      // Fetch full user profile
-      const fetchProfile = async () => {
-        try {
-          const response = await fetch("https://digus.uz/api/profile", {
-            headers: {
-              Authorization: `Bearer ${token}`,
-            },
-          })
-          const data = await response.json()
-          if (response.ok) {
+      fetch("https://digus.uz/api/profile", {
+        headers: { Authorization: `Bearer ${token}` },
+      })
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.user) {
             setFormData((prev) => ({
               ...prev,
               phone: data.user.phone || "",
@@ -103,18 +85,28 @@ export function ServiceRequestForm() {
               address: data.user.address || "",
             }))
           }
-        } catch (error) {
-          console.error("Profil ma'lumotlarini yuklashda xatolik:", error)
-        }
-      }
-
-      fetchProfile()
+        })
+        .catch((err) => console.error("Profil yuklashda xatolik:", err))
     }
   }, [user, token])
+
+  const updateFormData = (field: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }))
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setLoading(true)
+
+    if (!agreed && !user) {
+      toast({
+        title: "Rozilik talab qilinadi",
+        description: "Iltimos, maxfiylik siyosatiga rozilik bildiring.",
+        variant: "destructive",
+      })
+      setLoading(false)
+      return
+    }
 
     try {
       const requestData = {
@@ -126,9 +118,7 @@ export function ServiceRequestForm() {
         "Content-Type": "application/json",
       }
 
-      if (token) {
-        headers.Authorization = `Bearer ${token}`
-      }
+      if (token) headers.Authorization = `Bearer ${token}`
 
       const response = await fetch("https://digus.uz/api/services/request", {
         method: "POST",
@@ -137,24 +127,23 @@ export function ServiceRequestForm() {
       })
 
       const data = await response.json()
+      console.log("🚀 Serverdan olingan data:", data)
 
       if (response.ok) {
-        if (data.autoCreatedAccount) {
-          // Modal uchun ma'lumotlarni saqlash
+        if (data.generatedPassword || data.autoCreatedAccount) {
           setAccountInfo({
             email: formData.email,
-            password: data.generatedPassword,
+            password: data.generatedPassword ?? "(parol yuborilmagan)",
             autoCreated: true,
           })
           setShowAccountModal(true)
         } else {
           toast({
             title: "Muvaffaqiyat!",
-            description: "Xizmat so'rovi muvaffaqiyatli yuborildi. Tez orada siz bilan bog'lanamiz.",
+            description: "Xizmat so'rovi muvaffaqiyatli yuborildi.",
           })
         }
 
-        // Reset form
         setFormData({
           serviceType: "",
           deviceType: "",
@@ -170,27 +159,23 @@ export function ServiceRequestForm() {
           phone: user ? formData.phone : "",
         })
         setSelectedDate(undefined)
+        setAgreed(false)
       } else {
         toast({
           title: "Xatolik!",
-          description: data.message || "Xizmat so'rovini yuborishda xatolik yuz berdi.",
+          description: data.message || "So'rov yuborilmadi",
           variant: "destructive",
         })
       }
-    } catch (error) {
-      console.error("Xizmat so'rovini yuborishda xatolik:", error)
+    } catch (err) {
       toast({
         title: "Xatolik!",
-        description: "Server bilan bog'lanishda xatolik yuz berdi.",
+        description: "Server bilan bog'lanishda muammo",
         variant: "destructive",
       })
     }
 
     setLoading(false)
-  }
-
-  const updateFormData = (field: string, value: string) => {
-    setFormData((prev) => ({ ...prev, [field]: value }))
   }
 
   return (
@@ -398,6 +383,59 @@ export function ServiceRequestForm() {
                 onChange={(e) => updateFormData("additionalInfo", e.target.value)}
               />
             </div>
+
+            {!user && (
+                    <div className="flex items-start gap-2">
+                      <input
+                        type="checkbox"
+                        id="privacy"
+                        checked={agreed}
+                        onChange={(e) => setAgreed(e.target.checked)}
+                        required
+                      />
+                      <label htmlFor="privacy" className="text-sm">
+                        Men
+                        <button type="button" onClick={() => setShowPrivacy(true)} className="text-blue-600 underline mx-1">
+                          Maxfiylik siyosati
+                        </button>
+                        bilan tanishdim va roziman
+                      </label>
+                    </div>
+                  )}
+            <Dialog open={showPrivacy} onOpenChange={setShowPrivacy}>
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle>Maxfiylik siyosati</DialogTitle>
+            <DialogDescription>
+              Siz yuborayotgan ma'lumotlar faqat xizmat ko‘rsatish uchun ishlatiladi. Maxfiylikka qat’iy rioya qilinadi va uchinchi tomonlarga berilmaydi.
+            </DialogDescription>
+          </DialogHeader>
+        </DialogContent>
+      </Dialog>
+
+        <Dialog open={showAccountModal} onOpenChange={setShowAccountModal}>
+          <DialogContent className="sm:max-w-md">
+            <DialogHeader>
+              <DialogTitle className="text-green-600">✅ Hisob yaratildi!</DialogTitle>
+              <DialogDescription>
+                Quyidagi ma’lumotlar bilan tizimga kirishingiz mumkin:
+              </DialogDescription>
+            </DialogHeader>
+
+            {accountInfo && (
+              <div className="space-y-4">
+                <div className="bg-card p-4 rounded border">
+                  <p><strong>Email:</strong> {accountInfo.email}</p>
+                  <p><strong>Parol:</strong> {accountInfo.password}</p>
+                </div>
+                <div className="text-xs text-yellow-800">
+                  ⚠️ Bu ma’lumotlarni xavfsiz joyda saqlang. Parolni keyinroq o‘zgartirishingiz mumkin.
+                </div>
+                <Button onClick={() => setShowAccountModal(false)}>Tushunarli</Button>
+              </div>
+            )}
+          </DialogContent>
+        </Dialog>
 
             <Button type="submit" className="w-full" disabled={loading}>
               {loading ? "Yuborilmoqda..." : "Xizmat So'rovi Yuborish"}

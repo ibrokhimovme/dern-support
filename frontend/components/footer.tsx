@@ -75,7 +75,7 @@ export function Footer() {
 
         <div className="mt-8 pt-8 border-t">
           <p className="text-center text-sm text-muted-foreground">
-            © 2024 Dern Support. Barcha huquqlar himoyalangan.
+            © 2025 Dern Support. Barcha huquqlar himoyalangan.
           </p>
         </div>
       </div>

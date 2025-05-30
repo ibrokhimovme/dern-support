@@ -5,6 +5,9 @@ import jwt from "jsonwebtoken"
 import cors from "cors"
 import dotenv from "dotenv"
 
+import ownershipMiddleware from './middleware/ownership.js';
+
+
 // Import all models
 import { User } from "./models/User.js"
 import { ServiceRequest } from "./models/Service.js"
@@ -27,14 +30,13 @@ const PORT = process.env.PORT || 5000
 const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key"
 
 // Middleware
+app.use(ownershipMiddleware);
 app.use(cors())
 app.use(express.json())
 
+
 // MongoDB connection
-mongoose.connect("mongodb+srv://ibrokhimovme:RZXi00u156lBgfPL@cluster0.ne9ka2v.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
+mongoose.connect("mongodb+srv://ibrokhimovme:RZXi00u156lBgfPL@cluster0.ne9ka2v.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0")
 
 mongoose.connection.on("connected", () => {
   console.log("MongoDB ga muvaffaqiyatli ulandi")
